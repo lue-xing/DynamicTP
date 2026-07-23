@@ -1,0 +1,37 @@
+server:
+  port: 18081
+
+spring:
+  application:
+    name: apollo-example
+  config:
+    import: optional:apollo://application
+  profiles:
+    active: dev
+
+app:
+  id: dynamictp-apollo-example${unique-name:}
+env: dev
+
+apollo:
+  meta: http://127.0.0.1:8080
+  autoUpdateInjectedSpringProperties: true
+  bootstrap:
+    enabled: true
+    namespaces: application
+    eagerLoad:
+      enabled: true
+  configService: http://127.0.0.1:8080
+
+# 开启 actuator endpoint 指标暴露
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus             # 暴露 Prometheus 端点
+  metrics:
+    prometheus:
+      metrics:
+        export:
+          enabled: true            # 启用 Prometheus 导出

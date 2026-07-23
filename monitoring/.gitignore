@@ -1,0 +1,4 @@
+# 运行时数据，不提交到 Git
+nacos/data/
+nacos/logs/
+grafana/data/

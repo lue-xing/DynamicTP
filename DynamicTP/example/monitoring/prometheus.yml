@@ -1,0 +1,16 @@
+# 掠星 DynamicTP 本地 Prometheus 抓取示例（按实际部署路径挂载到 Prometheus 容器）
+global:
+  scrape_interval: 10s
+
+scrape_configs:
+  - job_name: dynamictp-app
+    metrics_path: /actuator/prometheus
+    static_configs:
+      # Prometheus 在 Docker、应用在宿主机 Windows 时：
+      - targets: ['host.docker.internal:18080']
+      # Prometheus 与应用都在本机直装时，可改为：
+      # - targets: ['127.0.0.1:18080']
+
+  - job_name: prometheus
+    static_configs:
+      - targets: ['localhost:9090']

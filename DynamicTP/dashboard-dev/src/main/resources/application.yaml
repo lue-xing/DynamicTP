@@ -1,0 +1,37 @@
+server:
+  port: 9009
+
+spring:
+  application:
+    name: luexing-dashboard
+
+dynamictp:
+  users: # 避免再使用数据库，用户名直接固定写到配置文件
+    - admin,admin
+    - test,test
+  nacos:
+    server-addr: http://127.0.0.1:8848
+  user-login:
+    exclude:
+      interfaces: |-
+        /api/luexing-dashboard/auth/login
+  namespaces: # 需要从 Nacos 中读取以下命名空间（自定义）配置文件检索动态线程池
+    - public
+    - framework
+    - common
+    - test
+    - prod
+  grafana:
+    # 本地 Grafana 面板地址，请按实际 dashboard 与变量名修改
+    url: http://127.0.0.1:3000/d/luexing-dynamictp?orgId=1&from=now-6h&to=now&var-application_name=nacos-cloud-example&var-dynamic_thread_pool_id=luexing-1&refresh=5s&theme=light&kiosk=true
+
+sa-token:
+  token-name: token                      # 请求头中的 token 名称
+  is-concurrent: true                    # 允许同一账号多地同时登录
+  is-share: true                         # 多人登录公用一个 token
+  is-read-body: true                     # 支持从 body 读取 token
+  is-read-header: true                   # 支持从 header 读取 token
+  is-read-cookie: false                  # 禁用从 cookie 读取 token（可选）
+  is-log: false                          # 关闭操作日志输出
+  is-color-log: false                    # 关闭打印彩色日志
+  is-print: false                        # 关闭控制台打印版本字符画日志

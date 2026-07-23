@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh"><head><script>
+(function(){
+  var LOGO="/luexing-logo.png?v=2",AVATAR="/luexing-avatar.jpg?v=2",TITLE="掠星动态线程池";
+  function patch(d){
+    d.app=d.app||{};d.app.name=TITLE;
+    d.logo={enable:!0,fit:"contain",source:LOGO};
+    d.widget=d.widget||{};d.widget.defaultAvatar=AVATAR;
+    return d;
+  }
+  try{
+    var k="vben-web-ele-5.5.6-prod-preferences",raw=localStorage.getItem(k);
+    if(raw&&raw.charAt(0)==="{")localStorage.setItem(k,JSON.stringify(patch(JSON.parse(raw))));
+    Object.keys(localStorage).forEach(function(key){
+      if(key.indexOf("vben")<0||!key.endsWith("-preferences"))return;
+      var v=localStorage.getItem(key);
+      if(!v||v.charAt(0)!=="{")return;
+      try{localStorage.setItem(key,JSON.stringify(patch(JSON.parse(v))))}catch(e){}
+    });
+  }catch(e){}
+})();
+</script><script src="/_app.config.js?v=5.5.6-7362080d"></script><meta charset="UTF-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/><meta name="renderer" content="webkit"/><meta name="description" content="掠星动态线程池管理控制台"/><meta name="keywords" content="DynamicTP,掠星,动态线程池"/><meta name="author" content="luexing"/><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0"/><title>掠星动态线程池</title><link rel="icon" href="/luexing-logo.png"/><style>
+/* 顶栏品牌区：自定义 logo + 标题 */
+.flex.h-full.items-center.text-lg img,
+.flex.h-full.items-center.text-lg .el-image__inner{
+  height:36px!important;width:36px!important;min-width:36px!important;
+  object-fit:contain!important;border-radius:6px!important;background:transparent!important;
+}
+.flex.h-full.items-center.text-lg>a>span,
+.flex.h-full.items-center.text-lg span.text-foreground{
+  font-size:15px!important;font-weight:600!important;letter-spacing:.02em;
+  white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis;
+}
+</style><script type="module" crossorigin src="/jse/index-index-D-6piK66.js"></script></head><body><script data-app-loading="inject-js">var theme = localStorage.getItem('vben-web-ele-5.5.6-prod-preferences-theme');
+  document.documentElement.classList.toggle('dark', /dark/.test(theme));</script><style data-app-loading="inject-css">html{line-height:1.15}.loading{align-items:center;background-color:#f4f7f9;display:flex;flex-direction:column;height:100%;justify-content:center;left:0;overflow:hidden;position:fixed;top:0;width:100%;z-index:9999}.loading.hidden{opacity:0;pointer-events:none;transition:all .8s ease-out;visibility:hidden}.dark .loading{background:#0d0d10}.title{color:rgba(0,0,0,.85);font-size:28px;font-weight:600;margin-top:66px}.dark .title{color:#fff}.loader{height:48px;position:relative;width:48px}.loader:before{animation:shadow-ani .5s linear infinite;background:rgba(0,128,255,.5);background:hsl(var(--primary,210 100% 50%)/50%);border-radius:50%;height:5px;top:60px;width:48px}.loader:after,.loader:before{content:"";left:0;position:absolute}.loader:after{animation:jump-ani .5s linear infinite;background:#0080ff;background:hsl(var(--primary,210 100% 50%));border-radius:4px;height:100%;top:0;width:100%}@keyframes jump-ani{15%{border-bottom-right-radius:3px}25%{transform:translateY(9px) rotate(22.5deg)}50%{border-bottom-right-radius:40px;transform:translateY(18px) scaleY(.9) rotate(45deg)}75%{transform:translateY(9px) rotate(67.5deg)}to{transform:translateY(0) rotate(90deg)}}@keyframes shadow-ani{0%,to{transform:scale(1)}50%{transform:scaleX(1.2)}}</style><div class="loading" id="__app-loading__"><div class="loader"></div><div class="title">掠星动态线程池</div></div><div id="app"></div></body></html>

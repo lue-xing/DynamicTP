@@ -1,0 +1,5 @@
+﻿
+2026/06/09 18:09:22 [error] 16952#14592: *34 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 127.0.0.1, server: localhost, request: "GET /api/projects HTTP/1.1", upstream: "http://127.0.0.1:9009/api/luexing-dashboard/projects", host: "127.0.0.1:5176", referrer: "http://127.0.0.1:5176/"
+2026/06/09 18:09:24 [error] 16952#14592: *36 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 127.0.0.1, server: localhost, request: "GET /api/grafana HTTP/1.1", upstream: "http://127.0.0.1:9009/api/luexing-dashboard/grafana", host: "127.0.0.1:5176", referrer: "http://127.0.0.1:5176/"
+2026/06/09 18:10:20 [notice] 6040#31104: signal process started
+2026/06/09 18:10:20 [error] 6040#31104: OpenEvent("Global\ngx_quit_29152") failed (2: The system cannot find the file specified)

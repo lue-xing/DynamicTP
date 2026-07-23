@@ -1,0 +1,36 @@
+server:
+  port: 18080
+
+spring:
+  application:
+    name: nacos-cloud-example${unique-name:}
+  config:
+    import:
+      - optional:classpath:nacos-config.yaml
+      - optional:nacos:dynamictp-nacos-cloud-example${unique-name:}.yaml
+  profiles:
+    active: dev
+
+  cloud:
+    nacos:
+      config:
+        username: nacos
+        password: nacos
+        file-extension: yaml
+        extension-configs:
+          - data-id: dynamictp-nacos-cloud-example${unique-name:}.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+      server-addr: 127.0.0.1:8848
+# 开启 actuator endpoint 指标暴露
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus             # 暴露 Prometheus 端点
+  metrics:
+    prometheus:
+      metrics:
+        export:
+          enabled: true            # 启用 Prometheus 导出

@@ -1,0 +1,47 @@
+# 本地开发默认配置（无需先往 Nacos 写入也可启动）
+# 若 Nacos 中已有同名 data-id，会覆盖本文件中的 dynamictp 配置
+dynamictp:
+  nacos:
+    data-id: dynamictp-nacos-cloud-example.yaml
+    group: DEFAULT_GROUP
+  config-file-type: yaml
+  web:
+    core-pool-size: 10
+    maximum-pool-size: 200
+    keep-alive-time: 60
+    notify:
+      receives: xxx
+  notify-platforms:
+    platform: DING
+    url: https://oapi.dingtalk.com/robot/send?access_token=xxx
+  executors:
+    - thread-pool-id: luexing-1
+      core-pool-size: 12
+      maximum-pool-size: 24
+      keep-alive-time: 19999
+      work-queue: ResizableCapacityLinkedBlockingQueue
+      queue-capacity: 10000
+      rejected-handler: CallerRunsPolicy
+      allow-core-thread-time-out: false
+      notify:
+        receives: xxx
+        interval: 5
+      alarm:
+        enable: true
+        queue-threshold: 80
+        active-threshold: 80
+    - thread-pool-id: luexing-2
+      core-pool-size: 10
+      maximum-pool-size: 20
+      keep-alive-time: 9999
+      work-queue: LinkedBlockingQueue
+      queue-capacity: 1024
+      rejected-handler: AbortPolicy
+      allow-core-thread-time-out: true
+      notify:
+        receives: xxx
+        interval: 5
+      alarm:
+        enable: true
+        queue-threshold: 80
+        active-threshold: 80
