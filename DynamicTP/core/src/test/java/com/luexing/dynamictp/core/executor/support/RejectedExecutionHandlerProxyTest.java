@@ -3,46 +3,80 @@
  */
 package com.luexing.dynamictp.core.executor.support;
 
-import cn.hutool.core.thread.ThreadUtil;
 import com.luexing.dynamictp.core.executor.DynamicTPExecutor;
 import com.luexing.dynamictp.core.toolkit.ThreadPoolExecutorBuilder;
-import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * 拒绝策略动态代理测试
- * <p>
  */
-@Slf4j
-public class RejectedExecutionHandlerProxyTest {
+class RejectedExecutionHandlerProxyTest {
+
+    private ThreadPoolExecutor executor;
+
+    @AfterEach
+    void tearDown() {
+        if (executor != null) {
+            executor.shutdownNow();
+            try {
+                executor.awaitTermination(2, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            executor = null;
+        }
+    }
 
     @Test
-    public void testRejectedExecutionHandlerProxy() {
-        ThreadPoolExecutor executor = ThreadPoolExecutorBuilder.builder()
+    void rejectedExecutionIncrementsRejectCount() throws Exception {
+        CountDownLatch started = new CountDownLatch(1);
+        CountDownLatch block = new CountDownLatch(1);
+
+        executor = ThreadPoolExecutorBuilder.builder()
                 .threadPoolId("test-rejected-proxy")
                 .corePoolSize(1)
                 .maximumPoolSize(1)
                 .keepAliveTime(10000L)
-                .workQueueType(BlockingQueueTypeEnum.SYNCHRONOUS_QUEUE)
+                .workQueueType(BlockingQueueTypeEnum.ARRAY_BLOCKING_QUEUE)
+                .workQueueCapacity(1)
                 .threadFactory("test-rejected-proxy_")
                 .rejectedHandler(new ThreadPoolExecutor.AbortPolicy())
                 .dynamicPool()
                 .build();
 
+        executor.execute(() -> {
+            started.countDown();
+            try {
+                block.await(5, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+        assertThat(started.await(2, TimeUnit.SECONDS)).isTrue();
+        executor.execute(() -> { });
+
+        int rejected = 0;
         for (int i = 0; i < 10; i++) {
             try {
-                executor.execute(() -> ThreadUtil.sleep(Integer.MAX_VALUE));
-            } catch (Exception ex) {
-                log.error("ThreadPool name :: {}, Exception :: ", Thread.currentThread().getName(), ex.getMessage());
+                executor.execute(() -> { });
+            } catch (RejectedExecutionException ex) {
+                rejected++;
             }
         }
 
-        ThreadUtil.sleep(1000);
+        DynamicTPExecutor dynamicExecutor = (DynamicTPExecutor) executor;
 
-        DynamicTPExecutor dynamicThreadPoolExecutor = (DynamicTPExecutor) executor;
-        Long rejectCount = dynamicThreadPoolExecutor.getRejectCount().get();
-        log.info("ThreadPool name :: {}, Reject count :: {}", Thread.currentThread().getName(), rejectCount);
+        assertThat(rejected).isGreaterThan(0);
+        assertThat(dynamicExecutor.getRejectCount().get()).isGreaterThan(0L);
+
+        block.countDown();
     }
 }
